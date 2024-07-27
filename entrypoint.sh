@@ -45,11 +45,8 @@ tar -C \$workdir -xjv;
 log 'Launching docker compose...';
 cd \$workdir;
 
-if $DOCKER_COMPOSE_DOWN
-then
-  log 'Executing docker compose down...';
-  docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" down
-fi
+log 'Executing docker compose down...';
+docker compose down
 
 if [ -n \"$DOCKERHUB_USERNAME\" ] && [ -n \"$DOCKERHUB_PASSWORD\" ]
 then
@@ -58,15 +55,9 @@ then
 fi
 
 log 'Executing docker compose pull...';
-docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" pull
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p pull
 
-if $NO_CACHE
-then
-  docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" build --no-cache
-  docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --force-recreate
-else
-  docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -p \"$DOCKER_COMPOSE_PREFIX\" up -d --remove-orphans --build;
-fi"
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d;
 
 log "Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 \
