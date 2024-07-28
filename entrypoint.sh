@@ -48,6 +48,7 @@ log 'docker compose down...';
 docker compose down
 
 log 'moving secrets into workspace...';
+rm -r secrets
 mv ../secrets .
 
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
