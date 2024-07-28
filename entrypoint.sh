@@ -58,7 +58,7 @@ else
   mkdir -p volumes/caddy/data;
   mkdir -p volumes/db/backups;
   mkdir -p volumes/db/pgdata;
-  cp ../volumes/* ./volumes;
+  cp -r ../volumes/* ./volumes;
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
