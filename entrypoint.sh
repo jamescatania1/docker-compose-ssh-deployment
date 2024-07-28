@@ -37,6 +37,13 @@ mkdir -p \$workdir;
 cd \$workdir;
 mkdir -p secrets;
 
+if [ -e volumes ]
+then
+  log 'AAAusing the existing volume mounts on the remote...';
+else
+  log 'BBB';
+fi
+
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
   log 'docker compose down...';
