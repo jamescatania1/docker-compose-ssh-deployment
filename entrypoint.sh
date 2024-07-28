@@ -33,9 +33,13 @@ log() {
 if [ -d \$workdir ]
 then
   cd \$workdir;
+
+  if [ -e $DOCKER_COMPOSE_FILENAME ]
+  then
+    log 'docker compose down...';
+    docker compose down;
+  fi
   
-  log 'docker compose down...';
-  docker compose down;
   cd ..;
   log 'Deleting workspace directory...';
   rm -rf \$workdir;
