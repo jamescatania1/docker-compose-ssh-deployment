@@ -35,6 +35,8 @@ log() {
 
 mkdir -p \$workdir;
 cd \$workdir;
+mkdir -p volumes;
+mkdir -p secrets;
 
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
@@ -45,7 +47,7 @@ fi
 if [ -z "$( ls -A './volumes' )" ]
 then
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  cp ../volumes/* ./volumes/
+  cp ../volumes/* ./volumes
 else
   log 'using the existing volume mounts on the remote...';
 fi
@@ -54,7 +56,7 @@ mv ../$DOCKER_COMPOSE_FILENAME .
 mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-mv ../secrets/* ./secrets/
+mv ../secrets/* ./secrets
 
 log 'deleting the temporary files...';
 rm -r ../secrets
