@@ -36,25 +36,25 @@ log() {
 mkdir -p \$workdir;
 cd \$workdir;
 
+if [ -e volumes ]
+then
+  log 'using the existing volume mounts on the remote...';
+else
+  log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
+  cp -r ../volumes .
+fi
+
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
   log 'docker compose down...';
   docker compose down;
 fi
 
-if [ -e volumes ]
-then
-  log 'using the existing volume mounts on the remote...';
-else
-  log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  cp ../volumes .
-fi
-
 mv ../$DOCKER_COMPOSE_FILENAME .
 mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-mv ../secrets .
+cp ../secrets .
 
 log 'deleting the temporary files...';
 rm -r ../secrets
