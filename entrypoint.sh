@@ -54,7 +54,7 @@ mv ../$DOCKER_COMPOSE_FILENAME .
 mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-cp ../secrets .
+cp -r ../secrets .
 
 log 'deleting the temporary files...';
 rm -r ../secrets
