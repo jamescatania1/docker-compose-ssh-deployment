@@ -42,7 +42,7 @@ then
   docker compose down;
   
   log 'deleting old compose/secret files...';
-  rm -r /secrets;
+  rm -r /secrets/*;
   rm -f $DOCKER_COMPOSE_FILENAME;
   rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
 fi
@@ -50,17 +50,17 @@ fi
 if [ -e volumes ]
 then
   log 'using the existing volume mounts on the remote...';
-  rm -r ../volumes
+  rm -r ../volumes/*;
 else
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  mv ../volumes .
+  mv ../volumes/* ./volumes/
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
 mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-mv ../secrets .
+mv ../secrets/* ./secrets/*
 
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 
