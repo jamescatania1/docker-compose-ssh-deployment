@@ -35,7 +35,6 @@ log() {
 
 mkdir -p \$workdir;
 cd \$workdir;
-mkdir -p volumes;
 mkdir -p secrets;
 
 if [ -e $DOCKER_COMPOSE_FILENAME ]
@@ -44,12 +43,15 @@ then
   docker compose down;
 fi
 
-if [ -z "$( ls -A './volumes' )" ]
+if [ -e volumes ]
 then
-  log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  cp ../volumes/* ./volumes
-else
   log 'using the existing volume mounts on the remote...';
+else
+  log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
+  mkdir -p volumes/caddy/data;
+  mkdir -p volumes/db/backups;
+  mkdir -p volumes/db/pgdata;
+  cp ../volumes/* ./volumes;
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
