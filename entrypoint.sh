@@ -9,13 +9,8 @@ cleanup() {
   set +e
   log "Killing ssh agent."
   ssh-agent -k
-  log "Removing workspace archive."
-  rm -f /tmp/workspace.tar.bz2
 }
 trap cleanup EXIT
-
-log "Packing workspace into archive to transfer onto remote machine."
-tar cjvf /tmp/workspace.tar.bz2 $TAR_PACKAGE_OPERATION_MODIFIERS .
 
 log "Launching ssh agent."
 eval `ssh-agent -s`
@@ -30,30 +25,33 @@ log() {
     echo '>> [remote]' \$@ ;
 };
 
-if [ -d \$workdir ]
-then
-  cd \$workdir;
+mkdir -p \$workdir;
+cd \$workdir;
 
-  if [ -e $DOCKER_COMPOSE_FILENAME ]
-  then
-    log 'docker compose down...';
-    docker compose down;
-  fi
+if [ -e $DOCKER_COMPOSE_FILENAME ]
+then
+  log 'docker compose down...';
+  docker compose down;
   
-  cd ..;
-  log 'Deleting workspace directory...';
-  rm -rf \$workdir;
+  log 'deleting old compose/secret files...';
+  rm -r /secrets;
+  rm -f $DOCKER_COMPOSE_FILENAME;
+  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
 fi
 
-log 'Creating workspace directory...';
-mkdir \$workdir;
+if [ -e volumes ]
+then
+  log 'using the existing volume mounts on the remote...';
+  rm -r ../volumes
+else
+  log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
+  mv ../volumes .
+fi
 
-log 'Unpacking workspace...';
-tar -C \$workdir -xjv;
-
+mv ../$DOCKER_COMPOSE_FILENAME .
+mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-rm -r secrets
 mv ../secrets .
 
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
@@ -67,4 +65,3 @@ log "Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 \
   "$SSH_USER@$SSH_HOST" -p "$SSH_PORT" \
   "$remote_command" \
-  < /tmp/workspace.tar.bz2
