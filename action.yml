@@ -17,22 +17,13 @@ inputs:
     description: The remote username.
     default: 'docker-deploy'
   docker_compose_prefix:
-    description: A prefix to add to the deployed containers.
+    description: The prefix to add to the deployed containers. <prefix>:x in docker hub.
   docker_compose_filename:
     description: The docker-compose file name.
     default: docker-compose.yaml
-  use_stack:
-    description: Use docker stack instead of docker compose ("true" or "false").
-    default: 'false'
-  no_cache:
-    description: Adds --no-cache flag to docker build command ("true" or "false").
-    default: 'false'
-  tar_package_operation_modifiers:
-    description: Tar operation modifiers used while creating the package.
-    default: '--exclude .git --exclude .github --exclude .gitignore --exclude .gitmodules --exclude .vscode'
-  docker_compose_down:
-    description: Execute docker-compose down ("true" or "false").
-    default: 'false'
+  docker_compose_filename_production:
+    description: The docker-compose file name that merges with the base filename in production.
+    default: docker-compose.prod.yaml
   dockerhub_username:
     description: Docker Hub username used for login.
   dockerhub_password:
@@ -46,10 +37,7 @@ runs:
     SSH_PORT: ${{ inputs.ssh_port }}
     SSH_PRIVATE_KEY: ${{ inputs.ssh_private_key }}
     DOCKER_COMPOSE_FILENAME: ${{ inputs.docker_compose_filename }}
+    DOCKER_COMPOSE_FILENAME_PRODUCTION: ${{ inputs.docker_compose_filename_production }}
     DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
-    USE_DOCKER_STACK: ${{ inputs.use_stack }}
-    NO_CACHE: ${{ inputs.no_cache }}
-    TAR_PACKAGE_OPERATION_MODIFIERS: ${{ inputs.tar_package_operation_modifiers }}
-    DOCKER_COMPOSE_DOWN: ${{ inputs.docker_compose_down }}
     DOCKERHUB_USERNAME: ${{ inputs.dockerhub_username }}
     DOCKERHUB_PASSWORD: ${{ inputs.dockerhub_password }}
