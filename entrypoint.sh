@@ -32,6 +32,11 @@ log() {
 
 if [ -d \$workdir ]
 then
+  cd \$workdir;
+  
+  log 'docker compose down...';
+  docker compose down;
+  cd ..;
   log 'Deleting workspace directory...';
   rm -rf \$workdir;
 fi
@@ -42,10 +47,6 @@ mkdir \$workdir;
 log 'Unpacking workspace...';
 tar -C \$workdir -xjv;
 
-cd \$workdir;
-
-log 'docker compose down...';
-docker compose down
 
 log 'moving secrets into workspace...';
 rm -r secrets
