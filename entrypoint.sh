@@ -12,10 +12,10 @@ cleanup() {
 
   log "removing the temporary files...";
   cd $HOME;
-  rm -r /secrets;
+  rm -r secrets;
   rm -f $DOCKER_COMPOSE_FILENAME;
   rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
-  rm -r /volumes;
+  rm -r volumes;
 }
 trap cleanup EXIT
 
@@ -52,7 +52,7 @@ fi
 if [ -z "$( ls -A '/volumes' )" ]
 then
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  mv ../volumes/* ./volumes/
+  cp ../volumes/* ./volumes/
 else
   log 'using the existing volume mounts on the remote...';
 fi
