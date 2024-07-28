@@ -60,7 +60,7 @@ log 'deleting the temporary files...';
 rm -r ../secrets
 rm -r ../volumes
 
-docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
+echo "$DOCKERHUB_PASSWORD" | docker login -u \"$DOCKERHUB_USERNAME\" --password-stdin
 
 log 'pulling...';
 docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -f \"$DOCKER_COMPOSE_FILENAME_PRODUCTION\" -p \"$DOCKER_COMPOSE_PREFIX\" pull
