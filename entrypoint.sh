@@ -52,7 +52,7 @@ docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 log 'pulling...';
 docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -f \"$DOCKER_COMPOSE_FILENAME_PRODUCTION\" -p \"$DOCKER_COMPOSE_PREFIX\" pull
 
-docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -f \"$DOCKER_COMPOSE_FILENAME_PRODUCTION\" up -d;
+docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -f \"$DOCKER_COMPOSE_FILENAME_PRODUCTION\" up -d;"
 
 log "Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 \
