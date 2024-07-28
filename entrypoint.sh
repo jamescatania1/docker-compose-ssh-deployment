@@ -10,12 +10,12 @@ cleanup() {
   log "killing ssh agent..."
   ssh-agent -k
   log "removing the temporary files...";
-  cd $HOME;
-  echo | ls;
-  rm -r secrets;
-  rm -f $DOCKER_COMPOSE_FILENAME;
-  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
-  rm -r volumes;
+  cd $HOME
+  log | ls
+  rm -r secrets
+  rm -f $DOCKER_COMPOSE_FILENAME
+  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION
+  rm -r volumes
 }
 trap cleanup EXIT
 
