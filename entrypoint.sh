@@ -50,9 +50,9 @@ docker compose down
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 
 log 'pulling...';
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p goosa pull
+docker compose -f $DOCKER_COMPOSE_FILENAME -f $DOCKER_COMPOSE_FILENAME_PRODUCTION -p $DOCKER_COMPOSE_PREFIX pull
 
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d;
+docker compose -f $DOCKER_COMPOSE_FILENAME -f $DOCKER_COMPOSE_FILENAME_PRODUCTION up -d;
 
 log "Connecting to remote host."
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 \
