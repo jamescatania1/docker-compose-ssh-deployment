@@ -9,6 +9,13 @@ cleanup() {
   set +e
   log "killing ssh agent..."
   ssh-agent -k
+
+  log "removing the temporary files...";
+  cd $HOME;
+  rm -r /secrets;
+  rm -f $DOCKER_COMPOSE_FILENAME;
+  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
+  rm -r /volumes;
 }
 trap cleanup EXIT
 
@@ -40,20 +47,14 @@ if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
   log 'docker compose down...';
   docker compose down;
-  
-  log 'deleting old compose/secret files...';
-  rm -r /secrets/*;
-  rm -f $DOCKER_COMPOSE_FILENAME;
-  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
 fi
 
-if [ -e volumes ]
+if [ -z "$( ls -A '/volumes' )" ]
 then
-  log 'using the existing volume mounts on the remote...';
-  rm -r ../volumes/*;
-else
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
   mv ../volumes/* ./volumes/
+else
+  log 'using the existing volume mounts on the remote...';
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
