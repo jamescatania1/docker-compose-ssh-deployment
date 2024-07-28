@@ -35,14 +35,6 @@ log() {
 
 mkdir -p \$workdir;
 cd \$workdir;
-mkdir -p secrets;
-
-if [ -e volumes ]
-then
-  log 'AAAusing the existing volume mounts on the remote...';
-else
-  log 'BBB';
-fi
 
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
@@ -55,17 +47,14 @@ then
   log 'using the existing volume mounts on the remote...';
 else
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
-  mkdir -p volumes/caddy/data;
-  mkdir -p volumes/db/backups;
-  mkdir -p volumes/db/pgdata;
-  cp -r ../volumes/* ./volumes;
+  cp ../volumes .
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
 mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
-mv ../secrets/* ./secrets
+mv ../secrets .
 
 log 'deleting the temporary files...';
 rm -r ../secrets
