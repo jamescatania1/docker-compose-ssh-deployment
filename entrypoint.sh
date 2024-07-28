@@ -58,6 +58,7 @@ Write-Output "::set-output name=SECRET_FILE_HASH::$($secretFileHash.Hash)";
 Write-Output "Secret file $secretFile has hash $($secretFileHash.Hash)";
 "
 
+log 'copying secret api_env...';
 pwsh "
 log 'copying secret .api.env...';
 $secretFile = Join-Path -Path $\workdir/secrets -ChildPath ".api.env"; 
