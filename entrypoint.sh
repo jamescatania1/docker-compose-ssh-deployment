@@ -42,20 +42,15 @@ mkdir \$workdir;
 log 'Unpacking workspace...';
 tar -C \$workdir -xjv;
 
-log 'Launching docker compose...';
 cd \$workdir;
 
-log 'Executing docker compose down...';
+log 'docker compose down...';
 docker compose down
 
-if [ -n \"$DOCKERHUB_USERNAME\" ] && [ -n \"$DOCKERHUB_PASSWORD\" ]
-then
-  log 'Executing docker login...';
-  docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
-fi
+docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 
-log 'Executing docker compose pull...';
-docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p pull
+log 'pulling...';
+docker compose -f docker-compose.yaml -f docker-compose.prod.yaml -p goosa pull
 
 docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d;
 
