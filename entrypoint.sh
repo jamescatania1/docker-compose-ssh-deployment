@@ -7,16 +7,24 @@ log() {
 
 cleanup() {
   set +e
-  log "Killing ssh agent."
+  log "killing ssh agent..."
   ssh-agent -k
 }
 trap cleanup EXIT
 
-log "Launching ssh agent."
+log "launching ssh agent..."
 eval `ssh-agent -s`
 
 ssh-add <(echo "$SSH_PRIVATE_KEY")
 
+log "sending the root compose and volumes default files to the remote..."
+scp -v -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 -P "$SSH_PORT" \
+  volumes "$SSH_USER@$SSH_HOST:/var/lib/docker-deploy/volumes"
+scp -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 -P "$SSH_PORT" \
+  $DOCKER_COMPOSE_FILENAME "$SSH_USER@$SSH_HOST:/var/lib/docker-deploy/$DOCKER_COMPOSE_FILENAME"
+scp -v -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=100 -P "$SSH_PORT" \
+  $DOCKER_COMPOSE_FILENAME_PRODUCTION "$SSH_USER@$SSH_HOST:/var/lib/docker-deploy/$DOCKER_COMPOSE_FILENAME_PRODUCTION"
+  
 remote_command="set -e;
 
 workdir=\"\$HOME/workspace\";
