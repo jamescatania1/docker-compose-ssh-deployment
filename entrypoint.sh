@@ -47,6 +47,30 @@ cd \$workdir;
 log 'docker compose down...';
 docker compose down
 
+log 'copying secret db_password...';
+pwsh "
+$secretFile = Join-Path -Path $\workdir/secrets -ChildPath "db_password.txt"; 
+$encodedBytes = [System.Convert]::FromBase64String($env:DB_PASSWORD); 
+Set-Content $secretFile -Value $encodedBytes -AsByteStream;
+$secretFileHash = Get-FileHash $secretFile;
+Write-Output "::set-output name=SECRET_FILE::$secretFile";
+Write-Output "::set-output name=SECRET_FILE_HASH::$($secretFileHash.Hash)";
+Write-Output "Secret file $secretFile has hash $($secretFileHash.Hash)";
+"
+
+pwsh "
+log 'copying secret .api.env...';
+$secretFile = Join-Path -Path $\workdir/secrets -ChildPath ".api.env"; 
+$encodedBytes = [System.Convert]::FromBase64String($env:API_ENV); 
+Set-Content $secretFile -Value $encodedBytes -AsByteStream;
+$secretFileHash = Get-FileHash $secretFile;
+Write-Output "::set-output name=SECRET_FILE::$secretFile";
+Write-Output "::set-output name=SECRET_FILE_HASH::$($secretFileHash.Hash)";
+Write-Output "Secret file $secretFile has hash $($secretFileHash.Hash)";
+"
+
+log 'copying secrets to remote...';
+
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 
 log 'pulling...';
