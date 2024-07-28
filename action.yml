@@ -28,6 +28,10 @@ inputs:
     description: Docker Hub username used for login.
   dockerhub_password:
     description: Docker Hub password used for login.
+  secret_api_env:
+    description: base64 encoding of api env file.
+  secret_db_password:
+    description: base64 encoding of the db_password.txt file
 runs:
   using: docker
   image: Dockerfile
@@ -41,3 +45,5 @@ runs:
     DOCKER_COMPOSE_PREFIX: ${{ inputs.docker_compose_prefix }}
     DOCKERHUB_USERNAME: ${{ inputs.dockerhub_username }}
     DOCKERHUB_PASSWORD: ${{ inputs.dockerhub_password }}
+    API_ENV: ${{ inputs.secret_api_env }}
+    DB_PASSWORD: ${{ inputs.secret_db_password }}
