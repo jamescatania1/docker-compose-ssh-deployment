@@ -9,13 +9,6 @@ cleanup() {
   set +e
   log "killing ssh agent..."
   ssh-agent -k
-  log "removing the temporary files...";
-  cd \$workdir;
-  log | ls;
-  rm -r secrets;
-  rm -f $DOCKER_COMPOSE_FILENAME;
-  rm -f $DOCKER_COMPOSE_FILENAME_PRODUCTION;
-  rm -r volumes;
 }
 trap cleanup EXIT
 
@@ -49,7 +42,7 @@ then
   docker compose down;
 fi
 
-if [ -z "$( ls -A '/volumes' )" ]
+if [ -z "$( ls -A './volumes' )" ]
 then
   log 'adding the repo's volume mounts to the remote, as it doesn't exist...';
   cp ../volumes/* ./volumes/
@@ -62,6 +55,10 @@ mv ../$DOCKER_COMPOSE_FILENAME_PRODUCTION .
 
 log 'moving secrets into workspace...';
 mv ../secrets/* ./secrets/*
+
+log 'deleting the temporary files...';
+rm -r ../secrets
+rm -r ../volumes
 
 docker login -u \"$DOCKERHUB_USERNAME\" -p \"$DOCKERHUB_PASSWORD\"
 
