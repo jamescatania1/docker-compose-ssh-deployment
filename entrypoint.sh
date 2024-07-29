@@ -52,7 +52,7 @@ mkdir -p volumes/db/backups
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
   log 'docker compose down...';
-  docker compose down;
+  docker compose -f \"$DOCKER_COMPOSE_FILENAME\" -f \"$DOCKER_COMPOSE_FILENAME_PRODUCTION\" down --remove-orphans;
 fi
 
 mv ../$DOCKER_COMPOSE_FILENAME .
