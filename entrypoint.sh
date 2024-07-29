@@ -44,6 +44,11 @@ else
   cp -r ../volumes .
 fi
 
+mkdir -p volumes/caddy/data/caddy_data
+mkdir -p volumes/caddy/data/caddy_config
+mkdir -p volumes/db/pgdata
+mkdir -p volumes/db/backups
+
 if [ -e $DOCKER_COMPOSE_FILENAME ]
 then
   log 'docker compose down...';
